@@ -1,7 +1,7 @@
 import toast, { Toaster } from "react-hot-toast";
 import SearchBar from "../SearchBar/SearchBar";
 import styles from "./App.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import fetchMovies from "../../services/movieService.ts";
 import type { Movie } from "../../types/movie.ts";
 import Loader from "../Loader/Loader.tsx";
@@ -23,6 +23,14 @@ function App() {
     enabled: query !== "",
     placeholderData: keepPreviousData,
   });
+
+  useEffect(() => {
+    if (isSuccess && data?.results.length === 0) {
+      toast.error("No movies found for your request.", {
+        position: "bottom-right",
+      });
+    }
+  }, [isSuccess, data]);
 
   const onOpen = (movie: Movie) => {
     setIsModalOpen(true);
